@@ -1,8 +1,8 @@
 {
   "public": {
     "default": {
-      "commerce-core-endpoint": "https://www.aemshop.net/graphql",
-      "commerce-endpoint": "https://www.aemshop.net/cs-graphql",
+      "commerce-core-endpoint": "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql",
+      "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql",
       "commerce-assets-enabled": false,
       "headers": {
         "all": {
@@ -10,30 +10,30 @@
         },
         "cs": {
           "Magento-Store-Code": "main_website_store",
-          "Magento-Store-View-Code": "default",
+          "Magento-Store-View-Code": "en_US",
           "Magento-Website-Code": "base",
-          "x-api-key": "4dfa19c9fe6f4cccade55cc5b3da94f7",
-          "Magento-Environment-Id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a"
+          "x-api-key": "f21df415ce6248148a23931a1c8c4e3c",
+          "Magento-Environment-Id": "Xun223LbRqWUYemTUEBb8y"
         }
       },
       "analytics": {
         "base-currency-code": "USD",
         "environment": "Testing",
-        "environment-id": "f38a0de0-764b-41fa-bd2c-5bc2f3c7b39a",
+        "environment-id": "Xun223LbRqWUYemTUEBb8y",
         "store-code": "main_website_store",
         "store-id": 1,
-        "store-name": "Main Website Store",
-        "store-url": "https://www.aemshop.net",
+        "store-name": "MNAO US Website Store",
+        "store-url": "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y",
         "store-view-code": "default",
         "store-view-id": 1,
-        "store-view-name": "Default Store View",
+        "store-view-name": "English",
         "website-code": "base",
         "website-id": 1,
-        "website-name": "Main Website"
+        "website-name": "MNAO US Website"
       },
       "plugins": {
         "picker": {
-           "rootCategory": "YOUR_ROOT_CATEGORY_ID"
+           "rootCategory": "2"
          }
       }
     }
