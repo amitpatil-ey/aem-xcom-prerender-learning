@@ -418,6 +418,10 @@
     ]
   },
   {
+    "id": "category",
+    "fields": []
+  },
+  {
     "id": "product-details",
     "fields": []
   },

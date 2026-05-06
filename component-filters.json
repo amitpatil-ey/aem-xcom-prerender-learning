@@ -38,7 +38,8 @@
       "columns",
       "fragment",
       "product-teaser",
-      "product-recommendations"
+      "product-recommendations",
+      "category"
     ]
   },
   {
@@ -55,7 +56,8 @@
       "enrichment",
       "product-teaser",
       "product-recommendations",
-      "product-list-page"
+      "product-list-page",
+      "category"
     ]
   },
   {

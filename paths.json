@@ -4,7 +4,8 @@
     "/content/aem-boilerplate-xcom-ey1/configuration:/.helix/config.json",
     "/content/aem-boilerplate-xcom-ey1/headers:/.helix/headers.json",
     "/content/aem-boilerplate-xcom-ey1/metadata:/metadata.json",
-    "/content/aem-boilerplate-xcom-ey1.resource/enrichment/enrichment.json:/enrichment/enrichment.json"
+    "/content/aem-boilerplate-xcom-ey1.resource/enrichment/enrichment.json:/enrichment/enrichment.json",
+    "/category/:slug -> /category"
   ],
   "includes": [
     "/content/aem-boilerplate-xcom-ey1/"
