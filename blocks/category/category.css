@@ -1,2 +1,8 @@
-.category.block { display: block; }
-.category.block .category-loading { padding: 2rem; text-align: center; }
+.category.block {
+  display: block;
+}
+
+.category.block .category-loading {
+  padding: 2rem;
+  text-align: center;
+}
