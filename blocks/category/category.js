@@ -1,5 +1,5 @@
 // blocks/category/category.js
-//import { getConfig } from '../../scripts/scripts.js'; // adjust to your config helper
+// import { getConfig } from '../../scripts/scripts.js'; // adjust to your config helper
 // import the Commerce category drop-in per your project setup
 // e.g. import { render as renderCategory } from '@dropins/storefront-product-list-page/render.js';
 
