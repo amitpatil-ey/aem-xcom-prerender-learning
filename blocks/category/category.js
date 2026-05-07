@@ -7,10 +7,10 @@ import { render as renderPLP } from '@dropins/storefront-product-discovery/rende
 
 function getCategorySlugFromPath() {
   const segments = window.location.pathname.split('/').filter(Boolean);
-  console.log('Category Slug segments:', segments);
+  console.info('Category Slug segments:', segments);
   // Expect: ['category', '<slug>']
   if (segments[0] !== 'category' || !segments[1]) return null;
-  console.log('segments:', segments[1]);
+  console.info('segments:', segments[1]);
   return decodeURIComponent(segments[1]);
 }
 
@@ -21,7 +21,7 @@ function showLoader(block) {
 
 export default async function decorate(block) {
   const slug = getCategorySlugFromPath();
-  console.log('Category slug:', slug);
+  console.info('Category slug:', slug);
   if (!slug) {
     block.innerHTML = '<p class="category-error">Category not found.</p>';
     return;
