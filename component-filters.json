@@ -23,7 +23,8 @@
       "columns",
       "fragment",
       "product-teaser",
-      "product-recommendations"
+      "product-recommendations",
+      "category"
     ]
   },
   {
@@ -407,5 +408,9 @@
       "button",
       "title"
     ]
+  },
+  {
+    "id": "category",
+    "components": ["category"]
   }
 ]
