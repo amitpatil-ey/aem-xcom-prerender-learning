@@ -52,6 +52,6 @@ export default async function decorate(block) {
     });
   } catch (err) {
     console.error('Category render failed:', err);
-    showError(block, 'Failed to load category');
+    block.innerHTML = '<p class="category-error">Failed to load category.</p>';
   }
 }
