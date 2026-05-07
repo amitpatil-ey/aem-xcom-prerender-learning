@@ -16,55 +16,51 @@ function getCategorySlugFromPath() {
  * Show loading state
  */
 function showLoader(block) {
-  block.innerHTML = `<div class="category-loading">Loading products...</div>`;
+  block.innerHTML = '<div class="category-loading">Loading products...</div>';
 }
 
 /**
  * Show error state
  */
 function showError(block, message = 'Something went wrong') {
-  block.innerHTML = `<p class="category-error">${message}</p>`;
+  block.innerHTML = '<p class="category-error">${message}</p>';
 }
 
 export default async function decorate(block) {
-  const slug = getCategorySlugFromPath();
-  
-    if (!slug) {
-        showError(block, 'Category not found');
-        return;
-    }
+  const slug = getCategorySlugFromPath();  
+  if (!slug) {
+    showError(block, 'Category not found');
+    return;
+  }
 
   // Expose slug for other blocks/breadcrumbs on the page
   document.documentElement.dataset.categorySlug = slug;
-
-  showLoader(block);
-  
-    try {
-        await renderPLP({
+  showLoader(block);  
+  try {
+      await renderPLP({
         container: block,
         config: {
-            commerce: {
+          commerce: {
             endpoint: "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql",
             apiKey: "3047cdff93ce43cbba3e6d0bc0725f68",
             storeViewCode: "en_US",
-            },
-            category: {
-            urlKey: slug,   // this drives category loading
-            },
-            pagination: {
+          },
+          category: {
+            urlKey: slug,
+          },
+          pagination: {
             pageSize: 24,
-            },
-            sorting: {
+          },
+          sorting: {
             default: 'position',
-            },
-            filters: {
+          },
+          filters: {
             enabled: true,
-            },
-        },
-        });
-
-    } catch (err) {
-        console.error('Category render failed:', err);
-        showError(block, 'Failed to load category');
-    }
+          },
+        }
+      });
+  } catch (err) {
+      console.error('Category render failed:', err);
+      showError(block, 'Failed to load category');
+  }
 }
