@@ -19,11 +19,11 @@ function showLoader(block) {
 
 // Show error state
 function showError(block, message = 'Something went wrong') {
-  block.innerHTML = '<p class="category-error">' + message + '</p>';
+  block.innerHTML = '<p class="category-error">' ${message} '</p>';
 }
 
 export default async function decorate(block) {
-  const slug = getCategorySlugFromPath();  
+  const slug = getCategorySlugFromPath();
   if (!slug) {
     showError(block, 'Category not found');
     return;
@@ -31,7 +31,7 @@ export default async function decorate(block) {
 
   // Expose slug for other blocks/breadcrumbs on the page
   document.documentElement.dataset.categorySlug = slug;
-  showLoader(block);  
+  showLoader(block);
   try {
     await renderPLP({
       container: block,
@@ -53,10 +53,10 @@ export default async function decorate(block) {
         filters: {
           enabled: true,
         },
-      }
+      },
     });
   } catch (err) {
-      console.error('Category render failed:', err);
-      showError(block, 'Failed to load category');
+    console.error('Category render failed:', err);
+    showError(block, 'Failed to load category');
   }
 }
