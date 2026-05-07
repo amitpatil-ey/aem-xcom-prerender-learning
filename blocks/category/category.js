@@ -3,6 +3,8 @@
 // import the Commerce category drop-in per your project setup
 // e.g. import { render as renderCategory } from '@dropins/storefront-product-list-page/render.js';
 
+import { render as renderPLP } from '@dropins/storefront-product-discovery/render.js';
+
 function getCategorySlugFromPath() {
   const segments = window.location.pathname.split('/').filter(Boolean);
   // Expect: ['category', '<slug>']
@@ -10,28 +12,59 @@ function getCategorySlugFromPath() {
   return decodeURIComponent(segments[1]);
 }
 
+/**
+ * Show loading state
+ */
+function showLoader(block) {
+  block.innerHTML = `<div class="category-loading">Loading products...</div>`;
+}
+
+/**
+ * Show error state
+ */
+function showError(block, message = 'Something went wrong') {
+  block.innerHTML = `<p class="category-error">${message}</p>`;
+}
+
 export default async function decorate(block) {
   const slug = getCategorySlugFromPath();
-
-  if (!slug) {
-    block.innerHTML = '<p>Category not found.</p>';
-    return;
-  }
+  
+    if (!slug) {
+        showError(block, 'Category not found');
+        return;
+    }
 
   // Expose slug for other blocks/breadcrumbs on the page
   document.documentElement.dataset.categorySlug = slug;
 
-  // Initialize the Commerce category drop-in with the slug / urlKey
-  // The exact API depends on which drop-in the project uses.
-  // Example (pseudo):
-  //
-  // await renderCategory(block, {
-  //   urlKey: slug,
-  //   pageSize: 24,
-  //   // other config: sort, filters, etc.
-  // });
+  showLoader(block);
+  
+    try {
+        await renderPLP({
+        container: block,
+        config: {
+            commerce: {
+            endpoint: "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql",
+            apiKey: "3047cdff93ce43cbba3e6d0bc0725f68",
+            storeViewCode: "en_US",
+            },
+            category: {
+            urlKey: slug,   // this drives category loading
+            },
+            pagination: {
+            pageSize: 24,
+            },
+            sorting: {
+            default: 'position',
+            },
+            filters: {
+            enabled: true,
+            },
+        },
+        });
 
-  // TODO: replace the pseudo call above with the actual drop-in initializer
-  // already used elsewhere in the project (search the repo for the existing
-  // Commerce drop-in import to stay consistent).
+    } catch (err) {
+        console.error('Category render failed:', err);
+        showError(block, 'Failed to load category');
+    }
 }
