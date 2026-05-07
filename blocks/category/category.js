@@ -12,18 +12,14 @@ function getCategorySlugFromPath() {
   return decodeURIComponent(segments[1]);
 }
 
-/**
- * Show loading state
- */
+// Show loading state
 function showLoader(block) {
   block.innerHTML = '<div class="category-loading">Loading products...</div>';
 }
 
-/**
- * Show error state
- */
+// Show error state
 function showError(block, message = 'Something went wrong') {
-  block.innerHTML = '<p class="category-error">${message}</p>';
+  block.innerHTML = '<p class="category-error">' + message + '</p>';
 }
 
 export default async function decorate(block) {
@@ -37,28 +33,28 @@ export default async function decorate(block) {
   document.documentElement.dataset.categorySlug = slug;
   showLoader(block);  
   try {
-      await renderPLP({
-        container: block,
-        config: {
-          commerce: {
-            endpoint: "https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql",
-            apiKey: "3047cdff93ce43cbba3e6d0bc0725f68",
-            storeViewCode: "en_US",
-          },
-          category: {
-            urlKey: slug,
-          },
-          pagination: {
-            pageSize: 24,
-          },
-          sorting: {
-            default: 'position',
-          },
-          filters: {
-            enabled: true,
-          },
-        }
-      });
+    await renderPLP({
+      container: block,
+      config: {
+        commerce: {
+          endpoint: 'https://na1-sandbox.api.commerce.adobe.com/Xun223LbRqWUYemTUEBb8y/graphql',
+          apiKey: '3047cdff93ce43cbba3e6d0bc0725f68',
+          storeViewCode: 'en_US',
+        },
+        category: {
+          urlKey: slug,
+        },
+        pagination: {
+          pageSize: 24,
+        },
+        sorting: {
+          default: 'position',
+        },
+        filters: {
+          enabled: true,
+        },
+      }
+    });
   } catch (err) {
       console.error('Category render failed:', err);
       showError(block, 'Failed to load category');
