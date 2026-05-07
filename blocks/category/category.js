@@ -17,15 +17,10 @@ function showLoader(block) {
   block.innerHTML = '<div class="category-loading">Loading products...</div>';
 }
 
-// Show error state
-function showError(block, message = 'Something went wrong') {
-  block.innerHTML = '<p class="category-error">' ${message} '</p>';
-}
-
 export default async function decorate(block) {
   const slug = getCategorySlugFromPath();
   if (!slug) {
-    showError(block, 'Category not found');
+    block.innerHTML = '<p class="category-error">Category not found.</p>';
     return;
   }
 
