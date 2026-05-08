@@ -1,7 +1,7 @@
 {
   "mappings": [
-    "/category/:slug -> /category.html",
-    "/category -> /content/aem-boilerplate-xcom-ey1/category",    
+    "/category/:slug -> /content/aem-boilerplate-xcom-ey1/category",
+    "/category -> /content/aem-boilerplate-xcom-ey1/category",
     "/content/aem-boilerplate-xcom-ey1/:/",
     "/content/aem-boilerplate-xcom-ey1/configuration:/.helix/config.json",
     "/content/aem-boilerplate-xcom-ey1/headers:/.helix/headers.json",
