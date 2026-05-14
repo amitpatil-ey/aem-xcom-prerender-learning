@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Dealer Selection — PDP Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    Import Map
+    ==========
+    Required for Adobe Commerce dropin resolution.
+    Copied from head.html for standalone testing.
+  -->
+  <script nonce="aem" type="importmap">
+    {
+      "imports": {
+        "@dropins/storefront-account/": "/scripts/__dropins__/storefront-account/",
+        "@dropins/storefront-auth/": "/scripts/__dropins__/storefront-auth/",
+        "@dropins/storefront-cart/": "/scripts/__dropins__/storefront-cart/",
+        "@dropins/storefront-checkout/": "/scripts/__dropins__/storefront-checkout/",
+        "@dropins/storefront-order/": "/scripts/__dropins__/storefront-order/",
+        "@dropins/storefront-payment-services/": "/scripts/__dropins__/storefront-payment-services/",
+        "@dropins/storefront-pdp/": "/scripts/__dropins__/storefront-pdp/",
+        "@dropins/storefront-recommendations/": "/scripts/__dropins__/storefront-recommendations/",
+        "@dropins/storefront-wishlist/": "/scripts/__dropins__/storefront-wishlist/",
+        "@dropins/storefront-personalization/": "/scripts/__dropins__/storefront-personalization/",
+        "@dropins/storefront-product-discovery/": "/scripts/__dropins__/storefront-product-discovery/",
+        "@dropins/tools/": "/scripts/__dropins__/tools/"
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="/styles/styles.css">
+
+  <script nonce="aem" src="/scripts/aem.js" type="module"></script>
+  <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
+
+  <style>
+    /*
+      Minimal page styles for the test page.
+      In production, EDS sections handle visibility via
+      data-section-status and display:none toggling.
+    */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    main .section {
+      display: block !important;
+    }
+  </style>
+</head>
+
+<body>
+  <header></header>
+
+  <main>
+    <!--
+      EDS Block Structure
+      ===================
+      EDS discovers blocks by looking for <div> elements
+      with a CSS class inside sections of <main>.
+
+      The class "pdp-dealer" maps to:
+        /blocks/pdp-dealer/pdp-dealer.js
+        /blocks/pdp-dealer/pdp-dealer.css
+
+      EDS auto-loads both when it encounters this class.
+    -->
+    <div>
+      <div class="pdp-dealer">
+        <div><div></div></div>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+</body>
+
+</html>

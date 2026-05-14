@@ -1,0 +1,56 @@
+[
+  {
+    "id": "DLR-001",
+    "name": "Metro Auto Hub",
+    "address": "42 Industrial Avenue, Sector 12",
+    "city": "Gurugram",
+    "state": "Haryana",
+    "pincode": "122001",
+    "phone": "+91-124-555-0101"
+  },
+  {
+    "id": "DLR-002",
+    "name": "Royal Motors",
+    "address": "88 MG Road, Connaught Place",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "pincode": "110001",
+    "phone": "+91-11-555-0202"
+  },
+  {
+    "id": "DLR-003",
+    "name": "Express Auto World",
+    "address": "15 NH-48 Service Road, Manesar",
+    "city": "Gurugram",
+    "state": "Haryana",
+    "pincode": "122051",
+    "phone": "+91-124-555-0303"
+  },
+  {
+    "id": "DLR-004",
+    "name": "Prestige Wheels",
+    "address": "271 Linking Road, Bandra West",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400050",
+    "phone": "+91-22-555-0404"
+  },
+  {
+    "id": "DLR-005",
+    "name": "Southern Star Automobiles",
+    "address": "9 Anna Salai, Nandanam",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "pincode": "600035",
+    "phone": "+91-44-555-0505"
+  },
+  {
+    "id": "DLR-006",
+    "name": "Lakeside Motor Corp",
+    "address": "56 Outer Ring Road, Bellandur",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "pincode": "560103",
+    "phone": "+91-80-555-0606"
+  }
+]

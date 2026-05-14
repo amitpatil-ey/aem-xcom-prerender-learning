@@ -426,6 +426,10 @@
     "fields": []
   },
   {
+    "id": "pdp-dealer",
+    "fields":[]
+  },
+  {
     "id": "product-list-page",
     "fields": [
       {

@@ -1,0 +1,87 @@
+/* =========================================
+   PDP DEALER BLOCK
+   =========================================
+   Auto-loaded by EDS via:
+     /blocks/pdp-dealer/pdp-dealer.css
+   ========================================= */
+
+.pdp-dealer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.pdp-dealer-container h1 {
+  margin: 0 0 24px;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dealer-dropin-container {
+  margin-bottom: 20px;
+}
+
+.add-to-cart-btn {
+  min-width: 220px;
+  height: 52px;
+  border: none;
+  border-radius: 8px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #000000;
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.98);
+}
+
+/* -----------------------------------------
+   WARNING MESSAGE
+   ----------------------------------------- */
+
+.warning-message:empty {
+  display: none;
+}
+
+.warning-message {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #fff3f3;
+  border: 1px solid #ffcaca;
+  color: #c62828;
+  font-size: 14px;
+}
+
+/* -----------------------------------------
+   INTEGRATED MODE
+   When pdp-dealer renders alongside
+   product-details on a real PDP.
+   ----------------------------------------- */
+
+.pdp-dealer-container--integrated {
+  padding: 0 24px 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.dealer-section-label {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
