@@ -26,8 +26,7 @@
       "product-recommendations",
       "featured-cars",
       "hero-carousel",
-      "image-grid",
-      "promo-video",
+      "image-grid",\
       "pdp-dealer",
       "category"
     ]
@@ -40,7 +39,6 @@
       "button",
       "title",
       "hero",
-      "promo-video",
       "cards",
       "columns",
       "fragment",
@@ -57,7 +55,6 @@
       "button",
       "title",
       "hero",
-      "promo-video",
       "cards",
       "columns",
       "fragment",
@@ -76,7 +73,6 @@
       "button",
       "title",
       "hero",
-      "promo-video",
       "cards",
       "columns",
       "fragment",
