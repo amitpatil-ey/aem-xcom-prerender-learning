@@ -20,9 +20,9 @@ function showLoader(block) {
 }
 
 export default async function decorate(block) {
-  //const slug = getCategorySlugFromPath();
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('slug');
+  const slug = getCategorySlugFromPath();
+  // const params = new URLSearchParams(window.location.search);
+  // const slug = params.get('slug');
   console.info('Category slug:', slug);
   if (!slug) {
     block.innerHTML = '<p class="category-error">Category not found.</p>';
