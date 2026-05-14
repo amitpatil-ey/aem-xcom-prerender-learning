@@ -50,14 +50,6 @@
 /* -----------------------------------------
    WARNING MESSAGE
    ----------------------------------------- */
-
-.warning-message {
-  display: inline-block;
-}
-.warning-message:empty {
-  display: none;
-}
-
 .warning-message {
   margin-top: 14px;
   padding: 14px 16px;
@@ -66,6 +58,11 @@
   border: 1px solid #ffcaca;
   color: #c62828;
   font-size: 14px;
+}
+
+
+.warning-message:empty {
+  display: none;
 }
 
 /* -----------------------------------------
