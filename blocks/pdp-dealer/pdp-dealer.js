@@ -33,19 +33,19 @@ export default async function decorate(block) {
   |
   */
 
-  const { initializeDealerDropin } = await import('../../../../../dropins/dealer/index.js');
+  const { initializeDealerDropin } = await import('../../dropins/dealer/index.js');
 
   const { validateDealerSelection } = await import(
-    '../../../../../dropins/dealer/services/dealer-validation.js'
+    '../../dropins/dealer/services/dealer-validation.js'
   );
 
   const { emitDealerRequired } = await import(
-    '../../../../../dropins/dealer/services/dealer-events.js'
+    '../../dropins/dealer/services/dealer-events.js'
   );
 
-  const { buildDealerAwareCartPayload } = await import(
-    '../../../../../dropins/dealer/integrations/dealer-cart.js'
-  );
+  /* const { buildDealerAwareCartPayload } = await import(
+    '../../dropins/dealer/integrations/dealer-cart.js'
+  ); */
 
   /*
   |--------------------------------------------------------------------------
@@ -71,7 +71,7 @@ export default async function decorate(block) {
       initializeDealerDropin,
       validateDealerSelection,
       emitDealerRequired,
-      buildDealerAwareCartPayload,
+      /* buildDealerAwareCartPayload, */
     );
   }
 }
@@ -127,7 +127,7 @@ function renderStandaloneMode(
   initializeDealerDropin,
   validateDealerSelection,
   emitDealerRequired,
-  buildDealerAwareCartPayload,
+  /* buildDealerAwareCartPayload, */
 ) {
   const product = {
     sku: 'demo-product',
@@ -167,14 +167,12 @@ function renderStandaloneMode(
           Please select dealer before adding product to cart.
         </p>
       `;
-
-      return;
     }
 
-    const payload = buildDealerAwareCartPayload(product);
+    /* const payload = buildDealerAwareCartPayload(product);
 
-    console.log('Dealer Aware Cart Payload:', payload);
-    alert('Product added to cart successfully');
+     console.log('Dealer Aware Cart Payload:', payload);
+    alert('Product added to cart successfully'); */
   });
 
   document.addEventListener('dealer:selected', () => {
