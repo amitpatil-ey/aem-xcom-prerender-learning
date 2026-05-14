@@ -789,6 +789,25 @@
       }
     ]
   },
+  {  "id": "featured-cars",
+    "fields": []
+  },
+  {
+    "id": "hero-carousel",
+    "fields": []
+  },
+  {
+    "id": "image-grid",
+    "fields": []
+  },
+  {
+    "id": "promo-video",
+    "fields": []
+  },
+  {
+    "id": "pdp-dealer",
+    "fields":[]
+  },
   {
     "id": "wishlist-metadata",
     "fields": [

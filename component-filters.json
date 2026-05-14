@@ -24,6 +24,11 @@
       "fragment",
       "product-teaser",
       "product-recommendations",
+      "featured-cars",
+      "hero-carousel",
+      "image-grid",
+      "promo-video",
+      "pdp-dealer",
       "category"
     ]
   },
