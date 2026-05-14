@@ -28,7 +28,6 @@
       "featured-cars",
       "hero-carousel",
       "image-grid",
-      "pdp-dealer",
       "category"
     ]
   },
@@ -80,6 +79,7 @@
       "fragment",
       "enrichment",
       "product-details",
+      "pdp-dealer",
       "product-teaser",
       "product-recommendations"
     ]
