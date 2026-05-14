@@ -1,0 +1,77 @@
+/* =========================
+   PROMO VIDEO BLOCK
+   Scoped styles for /home-test POC video section.
+========================= */
+
+.promo-video {
+  padding: 0;
+  background: #07111f;
+  color: #ffffff;
+}
+
+.pv-section {
+  padding: 100px 0;
+}
+
+.pv-container {
+  width: min(1400px, 92%);
+  margin: 0 auto;
+}
+
+/* Section Heading */
+.pv-section-heading {
+  margin-bottom: 48px;
+}
+
+.pv-section-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.pv-section-heading p {
+  color: #c4d3e8;
+  font-size: 16px;
+}
+
+/* Video Wrapper — 16:9 responsive */
+.pv-video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.pv-video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 24px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+  .pv-section {
+    padding: 64px 0;
+  }
+
+  .pv-section-heading h2 {
+    font-size: 32px;
+  }
+
+  .pv-video-wrapper {
+    border-radius: 16px;
+  }
+
+  .pv-video-wrapper iframe {
+    border-radius: 16px;
+  }
+}
