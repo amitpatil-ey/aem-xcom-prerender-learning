@@ -12,6 +12,6 @@ export async function getDealersByPincode(pincode = '') {
   }
 
   return dealers.filter(
-    (dealer) => dealer.pincode.includes(pincode)
+    (dealer) => dealer.pincode.includes(pincode),
   );
 }

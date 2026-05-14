@@ -18,7 +18,7 @@ export function initializeDealerDropin(container) {
 
     const cta = createDealerCTA(
       selectedDealer,
-      openDrawer
+      openDrawer,
     );
 
     container.appendChild(cta);

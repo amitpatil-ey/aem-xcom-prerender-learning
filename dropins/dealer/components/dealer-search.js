@@ -12,7 +12,7 @@ export function createDealerSearch(onSearch) {
     'input',
     debounce((event) => {
       onSearch(event.target.value);
-    }, 400)
+    }, 400),
   );
 
   wrapper.appendChild(input);

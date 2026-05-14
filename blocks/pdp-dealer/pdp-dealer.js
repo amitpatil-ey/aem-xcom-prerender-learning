@@ -33,18 +33,18 @@ export default async function decorate(block) {
   |
   */
 
-  const { initializeDealerDropin } = await import('/dropins/dealer/index.js');
+  const { initializeDealerDropin } = await import('../../../../../dropins/dealer/index.js');
 
   const { validateDealerSelection } = await import(
-    '/dropins/dealer/services/dealer-validation.js'
+    '../../../../../dropins/dealer/services/dealer-validation.js'
   );
 
   const { emitDealerRequired } = await import(
-    '/dropins/dealer/services/dealer-events.js'
+    '../../../../../dropins/dealer/services/dealer-events.js'
   );
 
   const { buildDealerAwareCartPayload } = await import(
-    '/dropins/dealer/integrations/dealer-cart.js'
+    '../../../../../dropins/dealer/integrations/dealer-cart.js'
   );
 
   /*
