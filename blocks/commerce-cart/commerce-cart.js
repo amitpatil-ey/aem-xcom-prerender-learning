@@ -28,14 +28,22 @@ import { publishShoppingCartViewEvent } from '@dropins/storefront-cart/api.js';
 import createMiniPDP from '../../scripts/components/commerce-mini-pdp/commerce-mini-pdp.js';
 import createModal from '../modal/modal.js';
 
+// Custom Dropins (Dealer)
+import { createDealerCTA } from '../../dropins/dealer/components/dealer-cta.js';
+import { createDealerDrawer } from '../../dropins/dealer/components/dealer-drawer.js';
+import { updateCartItemDealer, getCartItemDealer, getDealerForSku } from '../../dropins/dealer/integrations/cart-service.js';
+
 // Initializers
 import '../../scripts/initializers/cart.js';
 import '../../scripts/initializers/wishlist.js';
 
-import { readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { fetchPlaceholders, rootLink, getProductLink } from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
+  // Load dealer dropin CSS (drawer needs fixed positioning styles)
+  loadCSS('/dropins/dealer/styles/dealer.css');
+
   // Configuration
   const {
     'hide-heading': hideHeading = 'false',
@@ -201,6 +209,64 @@ export default async function decorate(block) {
         },
 
         Footer: (ctx) => {
+          // --- Dealer Info ---
+          // 3-tier resolution: server → localStorage (itemUid) → localStorage (SKU)
+          const dealerOption = ctx.item?.enteredOptions?.find((opt) => opt.uid === 'dealer_id');
+          const clientDealerByUid = getCartItemDealer(ctx.item.uid);
+          const clientDealerBySku = getDealerForSku(ctx.item.sku);
+
+          let itemDealer = null;
+          if (dealerOption) {
+            // Tier 1: Server-side (from addProductsToCart when backend custom attribute exists)
+            itemDealer = { id: dealerOption.value, name: `Dealer ${dealerOption.value}` };
+          } else if (clientDealerByUid) {
+            // Tier 2: Client-side by item UID (from cart page drawer update)
+            itemDealer = clientDealerByUid;
+          } else if (clientDealerBySku) {
+            // Tier 3: Client-side by SKU (PDP → Cart bridge)
+            itemDealer = clientDealerBySku;
+          }
+
+          const $dealerContainer = document.createElement('div');
+          $dealerContainer.classList.add('cart-item-dealer');
+          $dealerContainer.style.marginTop = 'var(--spacing-small, 1rem)';
+          $dealerContainer.style.marginBottom = 'var(--spacing-small, 1rem)';
+
+          if (!itemDealer) {
+            $dealerContainer.classList.add('cart-item-dealer--missing');
+            // Adding a subtle highlight style for mandatory selection
+            $dealerContainer.style.borderLeft = '3px solid var(--color-error, #d32f2f)';
+            $dealerContainer.style.paddingLeft = '8px';
+          }
+
+          function renderCartItemDealerCTA() {
+            $dealerContainer.innerHTML = '';
+            const cta = createDealerCTA(itemDealer, () => {
+              // Drawer manages its own DOM lifecycle, no appendChild needed
+              createDealerDrawer(async () => {
+                // Event Orchestration: Fetch momentarily selected dealer and apply strictly to this item
+                const { getSelectedDealer } = await import('../../dropins/dealer/context/dealer-context.js');
+                const freshlySelected = getSelectedDealer('global'); // Drawer uses global scope internally
+
+                if (freshlySelected && freshlySelected.id !== itemDealer?.id) {
+                  itemDealer = freshlySelected;
+                  renderCartItemDealerCTA();
+
+                  // Trigger true GraphQL mutation via Custom Service Layer
+                  try {
+                    await updateCartItemDealer(ctx.item.uid, ctx.item.quantity, freshlySelected, ctx.item.sku);
+                  } catch (e) {
+                    console.error('Failed to update dealer for cart item:', e);
+                  }
+                }
+              });
+            });
+            $dealerContainer.appendChild(cta);
+          }
+
+          renderCartItemDealerCTA();
+          ctx.appendChild($dealerContainer);
+
           // Edit Link
           if (ctx.item?.itemType === 'ConfigurableCartItem' && enableUpdatingProduct === 'true') {
             const editLink = document.createElement('div');
@@ -319,6 +385,44 @@ export default async function decorate(block) {
     setTimeout(() => {
       $notification.innerHTML = '';
     }, 5000);
+  });
+
+  // Runtime Augmentation: Intercept Checkout Routing via Event Delegation
+  block.addEventListener('click', async (e) => {
+    const checkoutLink = e.target.closest(`a[href*="${checkoutURL}"]`);
+    if (checkoutLink) {
+      const cartData = events.lastPayload('cart/data');
+      if (cartData && cartData.items) {
+        // Validate every item has a dealer
+        const isMissingDealers = cartData.items.some((item) => !item.enteredOptions?.some((opt) => opt.uid === 'dealer_id'));
+
+        if (isMissingDealers) {
+          e.preventDefault(); // Stop routing
+          e.stopPropagation();
+
+          // Show error notification
+          const existingAlert = document.querySelector('.dealer-validation-alert');
+          if (existingAlert) existingAlert.remove();
+
+          const alertContainer = document.createElement('div');
+          alertContainer.className = 'dealer-validation-alert';
+
+          await UI.render(InLineAlert, {
+            heading: 'Dealer Selection Required',
+            description: 'Please select a dealer for every item in your cart before proceeding to checkout.',
+            icon: h(Icon, { source: 'Warning' }),
+            'aria-live': 'assertive',
+            role: 'alert',
+            onDismiss: () => {
+              alertContainer.remove();
+            },
+          })(alertContainer);
+
+          block.prepend(alertContainer);
+          window.scrollTo({ top: alertContainer.offsetTop - 100, behavior: 'smooth' });
+        }
+      }
+    }
   });
 
   return Promise.resolve();

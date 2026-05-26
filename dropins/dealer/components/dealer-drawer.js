@@ -15,9 +15,10 @@ import { emitDealerSelected } from '../services/dealer-events.js';
  * - Selecting a dealer closes the drawer and emits event
  *
  * @param {Function} onClose - Callback when drawer closes
+ * @param {string} [scope='global'] - State scope key (e.g. SKU for PDP, 'global' for standalone)
  * @returns {{ overlay: HTMLElement, drawer: HTMLElement }} DOM elements
  */
-export function createDealerDrawer(onClose) {
+export function createDealerDrawer(onClose, scope = 'global') {
   /*
   |--------------------------------------------------------------------------
   | Overlay
@@ -90,7 +91,7 @@ export function createDealerDrawer(onClose) {
       const dealerList = createDealerList(
         dealers,
         (dealer) => {
-          setSelectedDealer(dealer);
+          setSelectedDealer(dealer, scope);
           emitDealerSelected(dealer);
           closeDrawer();
         },

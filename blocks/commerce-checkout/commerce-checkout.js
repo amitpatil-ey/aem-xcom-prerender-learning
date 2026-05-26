@@ -144,6 +144,27 @@ export default async function decorate(block) {
   const handleValidation = () => {
     let success = true;
 
+    // Custom Middleware: Validate Dealer Selection for all items
+    const cartData = events.lastPayload('checkout/initialized') || events.lastPayload('checkout/updated');
+    if (cartData && cartData.items) {
+      const isMissingDealers = cartData.items.some((item) => !item.enteredOptions?.some((opt) => opt.uid === 'dealer_id'));
+      if (isMissingDealers) {
+        let alertContainer = document.querySelector('.checkout-dealer-alert');
+        if (!alertContainer) {
+          alertContainer = document.createElement('div');
+          alertContainer.className = 'checkout-dealer-alert';
+          $content.prepend(alertContainer);
+        }
+        alertContainer.innerHTML = `
+          <div style="padding: 16px; background-color: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; margin-bottom: 24px; border-radius: 4px;">
+            <strong>Dealer Selection Missing:</strong> You must select a dealer for every item. Please return to the Cart to complete this step.
+          </div>
+        `;
+        scrollToElement(alertContainer);
+        return false;
+      }
+    }
+
     // Login form validation - skip for authenticated users
     const loginForm = document.forms[LOGIN_FORM_NAME];
     const isLoginFormVisible = loginForm && loginForm.offsetParent !== null;

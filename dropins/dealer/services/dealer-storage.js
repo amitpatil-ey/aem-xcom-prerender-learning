@@ -1,11 +1,13 @@
-const STORAGE_KEY = 'selectedDealer';
-
-export function saveDealer(dealer) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(dealer));
+export function getStorageKey(scope = 'global') {
+  return `selectedDealer_${scope}`;
 }
 
-export function getSavedDealer() {
-  const data = localStorage.getItem(STORAGE_KEY);
+export function saveDealer(dealer, scope = 'global') {
+  localStorage.setItem(getStorageKey(scope), JSON.stringify(dealer));
+}
+
+export function getSavedDealer(scope = 'global') {
+  const data = localStorage.getItem(getStorageKey(scope));
 
   if (!data) {
     return null;
@@ -14,6 +16,6 @@ export function getSavedDealer() {
   return JSON.parse(data);
 }
 
-export function clearDealer() {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearDealer(scope = 'global') {
+  localStorage.removeItem(getStorageKey(scope));
 }

@@ -1,0 +1,195 @@
+/* =========================
+   FEATURED CARS BLOCK
+   Scoped styles for /home-test POC car carousel.
+========================= */
+
+.featured-cars {
+  padding: 0;
+  background: #07111f;
+  color: #fff;
+}
+
+.fc-section {
+  padding: 100px 0;
+}
+
+.fc-container {
+  width: min(1400px, 92%);
+  margin: 0 auto;
+}
+
+/* Section Heading */
+.fc-section-heading {
+  margin-bottom: 48px;
+}
+
+.fc-section-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.fc-section-heading p {
+  color: #c4d3e8;
+  font-size: 16px;
+}
+
+/* Carousel Wrapper */
+.fc-carousel-wrapper {
+  position: relative;
+}
+
+.fc-track-container {
+  overflow: hidden;
+}
+
+.fc-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Car Cards */
+.fc-car-card {
+  min-width: calc(33.333% - 16px);
+  background: #111827;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  flex-shrink: 0;
+}
+
+.fc-car-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 40%);
+}
+
+.fc-car-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.fc-card-content {
+  padding: 24px;
+}
+
+.fc-card-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.fc-card-content p {
+  color: #c4d3e8;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.fc-card-link {
+  color: #5da9ff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.fc-card-link:hover {
+  color: #82bfff;
+}
+
+/* Carousel Navigation Buttons */
+.fc-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: #0b5fff;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+.fc-carousel-btn:hover:not(:disabled) {
+  background: #0a4ed6;
+}
+
+.fc-carousel-btn:disabled {
+  cursor: default;
+}
+
+.fc-carousel-prev {
+  left: -18px;
+}
+
+.fc-carousel-next {
+  right: -18px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+  .fc-car-card {
+    min-width: calc(50% - 12px);
+  }
+
+  .fc-car-card img {
+    height: 220px;
+  }
+
+  .fc-section {
+    padding: 64px 0;
+  }
+
+  .fc-section-heading h2 {
+    font-size: 32px;
+  }
+
+  .fc-carousel-prev {
+    left: -10px;
+  }
+
+  .fc-carousel-next {
+    right: -10px;
+  }
+
+  .fc-carousel-btn {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 600px) {
+  .fc-car-card {
+    min-width: 100%;
+  }
+
+  .fc-car-card img {
+    height: 200px;
+  }
+
+  .fc-carousel-prev {
+    left: 4px;
+  }
+
+  .fc-carousel-next {
+    right: 4px;
+  }
+
+  .fc-carousel-btn {
+    width: 38px;
+    height: 38px;
+  }
+}

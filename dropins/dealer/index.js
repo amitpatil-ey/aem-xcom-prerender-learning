@@ -25,11 +25,10 @@ export function initializeDealerDropin(container) {
   }
 
   function openDrawer() {
-    const drawer = createDealerDrawer(() => {
+    // createDealerDrawer self-mounts overlay + drawer to document.body
+    createDealerDrawer(() => {
       renderCTA();
     });
-
-    document.body.appendChild(drawer);
   }
 
   renderCTA();

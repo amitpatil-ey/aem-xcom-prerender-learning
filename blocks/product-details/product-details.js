@@ -14,6 +14,8 @@ import { render as wishlistRender } from '@dropins/storefront-wishlist/render.js
 import { WishlistToggle } from '@dropins/storefront-wishlist/containers/WishlistToggle.js';
 import { WishlistAlert } from '@dropins/storefront-wishlist/containers/WishlistAlert.js';
 
+// Custom Dropins (Dealer)
+
 // Containers
 import ProductHeader from '@dropins/storefront-pdp/containers/ProductHeader.js';
 import ProductPrice from '@dropins/storefront-pdp/containers/ProductPrice.js';
@@ -24,6 +26,10 @@ import ProductDescription from '@dropins/storefront-pdp/containers/ProductDescri
 import ProductAttributes from '@dropins/storefront-pdp/containers/ProductAttributes.js';
 import ProductGallery from '@dropins/storefront-pdp/containers/ProductGallery.js';
 import ProductGiftCardOptions from '@dropins/storefront-pdp/containers/ProductGiftCardOptions.js';
+import { loadCSS } from '../../scripts/aem.js';
+import { createDealerDrawer } from '../../dropins/dealer/components/dealer-drawer.js';
+import { createDealerCTA } from '../../dropins/dealer/components/dealer-cta.js';
+import { getSelectedDealer } from '../../dropins/dealer/context/dealer-context.js';
 
 // Libs
 import {
@@ -75,6 +81,9 @@ export default async function decorate(block) {
   const product = events.lastPayload('pdp/data') ?? null;
   const labels = await fetchPlaceholders();
 
+  // Load dealer dropin CSS (previously loaded by pdp-dealer block)
+  loadCSS('/dropins/dealer/styles/dealer.css');
+
   // Read itemUid from URL
   const urlParams = new URLSearchParams(window.location.search);
   const itemUidFromUrl = urlParams.get('itemUid');
@@ -99,6 +108,7 @@ export default async function decorate(block) {
           <div class="product-details__options"></div>
           <div class="product-details__quantity"></div>
           <div class="product-details__buttons">
+            <div class="product-details__buttons__dealer-cta"></div>
             <div class="product-details__buttons__add-to-cart"></div>
             <div class="product-details__buttons__add-to-wishlist"></div>
           </div>
@@ -118,6 +128,7 @@ export default async function decorate(block) {
   const $options = fragment.querySelector('.product-details__options');
   const $quantity = fragment.querySelector('.product-details__quantity');
   const $giftCardOptions = fragment.querySelector('.product-details__gift-card-options');
+  const $dealerCta = fragment.querySelector('.product-details__buttons__dealer-cta');
   const $addToCart = fragment.querySelector('.product-details__buttons__add-to-cart');
   const $wishlistToggleBtn = fragment.querySelector('.product-details__buttons__add-to-wishlist');
   const $description = fragment.querySelector('.product-details__description');
@@ -219,17 +230,63 @@ export default async function decorate(block) {
     // Attributes
     pdpRendered.render(ProductAttributes, {})($attributes),
 
-    // Wishlist button - WishlistToggle Container
     wishlistRender.render(WishlistToggle, {
       product,
     })($wishlistToggleBtn),
   ]);
+
+  // Render Dealer CTA (Scoped by SKU)
+  const skuScope = product?.sku || 'global';
+
+  function renderPDPDealerCTA() {
+    $dealerCta.innerHTML = '';
+    const selectedDealer = getSelectedDealer(skuScope);
+    const cta = createDealerCTA(selectedDealer, () => {
+      // Drawer mounts itself, no need to appendChild here
+      // Pass skuScope so the drawer writes to the same scope we read from
+      createDealerDrawer(() => {
+        renderPDPDealerCTA();
+      }, skuScope);
+    });
+    $dealerCta.appendChild(cta);
+  }
+
+  renderPDPDealerCTA();
+
+  document.addEventListener('dealer:selected', () => {
+    renderPDPDealerCTA();
+    // Clear alert when dealer selected
+    inlineAlert?.remove();
+  });
 
   // Configuration – Button - Add to Cart
   const addToCart = await UI.render(Button, {
     children: labels.Global?.AddProductToCart,
     icon: h(Icon, { source: 'Cart' }),
     onClick: async () => {
+      // Validate dealer selection before allowing add to cart
+      if (!getSelectedDealer(skuScope)) {
+        const { emitDealerRequired } = await import(
+          '../../dropins/dealer/services/dealer-events.js'
+        );
+        emitDealerRequired();
+
+        inlineAlert?.remove();
+        inlineAlert = await UI.render(InLineAlert, {
+          heading: 'Dealer Selection Required',
+          description: 'Please select a dealer before adding to cart.',
+          icon: h(Icon, { source: 'Warning' }),
+          'aria-live': 'assertive',
+          role: 'alert',
+          onDismiss: () => {
+            inlineAlert.remove();
+          },
+        })($alert);
+
+        $alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
       const buttonActionText = isUpdateMode
         ? labels.Global?.UpdatingInCart
         : labels.Global?.AddingToCart;
@@ -246,13 +303,15 @@ export default async function decorate(block) {
 
         // add or update the product in the cart
         if (valid) {
+          const itemPayload = { ...values };
+
           if (isUpdateMode) {
             // --- Update existing item ---
-            const { updateProductsFromCart } = await import(
-              '@dropins/storefront-cart/api.js'
+            const { updateProductsFromCartWithDealer } = await import(
+              '../../dropins/dealer/integrations/cart-service.js'
             );
 
-            await updateProductsFromCart([{ ...values, uid: itemUidFromUrl }]);
+            await updateProductsFromCartWithDealer([{ ...itemPayload, uid: itemUidFromUrl }], skuScope);
 
             // --- START REDIRECT ON UPDATE ---
             const updatedSku = values?.sku;
@@ -273,10 +332,10 @@ export default async function decorate(block) {
             return;
           }
           // --- Add new item ---
-          const { addProductsToCart } = await import(
-            '@dropins/storefront-cart/api.js'
+          const { addProductsToCartWithDealer } = await import(
+            '../../dropins/dealer/integrations/cart-service.js'
           );
-          await addProductsToCart([{ ...values }]);
+          await addProductsToCartWithDealer([itemPayload], skuScope);
         }
 
         // reset any previous alerts if successful
