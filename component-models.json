@@ -809,6 +809,19 @@
     "fields":[]
   },
   {
+    "id": "header-logo",
+    "fields": [
+      {
+        "component": "text",
+        "name": "endpoint",
+        "label": "GraphQL Endpoint",
+        "valueType": "string",
+        "value": "https://publish-p153424-e1601770.adobeaemcloud.com/graphql/execute.json/shared/Header",
+        "description": "Persisted GraphQL query URL that returns data.headermodelByPath.item. Leave blank to use the default shared endpoint."
+      }
+    ]
+  },
+  {
     "id": "wishlist-metadata",
     "fields": [
       {
