@@ -60,8 +60,19 @@
   100% { background-position: 0 50%; }
 }
 
-.header-logo--error {
+/* Production: hide silently. Dev (localhost / *.aem.page) shows .header-logo__error */
+.header-logo--error:empty {
   display: none;
+}
+
+.header-logo__error {
+  display: inline-block;
+  padding: 4px 8px;
+  font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 4px;
 }
 
 /* When used inside the nav, align with the existing brand slot */

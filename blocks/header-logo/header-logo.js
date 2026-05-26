@@ -76,7 +76,10 @@ function readAuthoredConfig(block) {
 }
 
 async function fetchHeaderModel(endpoint) {
-  const res = await fetch(endpoint, { method: 'GET' });
+  // Note: AEM publish must send `Access-Control-Allow-Origin` for this fetch
+  // to succeed from a different origin (localhost, *.aem.page, *.aem.live).
+  // If you see a TypeError here, it's almost always CORS.
+  const res = await fetch(endpoint, { method: 'GET', mode: 'cors' });
   if (!res.ok) {
     throw new Error(`Header GraphQL request failed: ${res.status} ${res.statusText}`);
   }
@@ -86,6 +89,42 @@ async function fetchHeaderModel(endpoint) {
     throw new Error('Header GraphQL response is missing data.headermodelByPath.item');
   }
   return item;
+}
+
+function isDevHost() {
+  const { hostname } = window.location;
+  return hostname === 'localhost'
+    || hostname === '127.0.0.1'
+    || hostname.endsWith('.aem.page')
+    || hostname.endsWith('.hlx.page');
+}
+
+function renderError(block, err, endpoint) {
+  // Likely-CORS = a TypeError with no response status (fetch threw before reading).
+  const looksLikeCors = err instanceof TypeError;
+  const message = looksLikeCors
+    ? 'header-logo: blocked by CORS. Add Access-Control-Allow-Origin on the AEM publish CORS config.'
+    : `header-logo: ${err.message}`;
+
+  // eslint-disable-next-line no-console
+  console.error('[header-logo] failed to load logo from GraphQL', { endpoint, error: err });
+  if (looksLikeCors) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[header-logo] The browser blocked reading the response from',
+      endpoint,
+      '\nFix: configure com.adobe.granite.cors.impl.CORSPolicyImpl on AEM publish to allow your EDS origin.',
+    );
+  }
+
+  block.classList.add('header-logo--error');
+  // Only show a visible hint on dev/preview hosts so production stays clean.
+  if (isDevHost()) {
+    const hint = document.createElement('span');
+    hint.className = 'header-logo__error';
+    hint.textContent = message;
+    block.append(hint);
+  }
 }
 
 function buildLogo(item, endpoint) {
@@ -143,11 +182,8 @@ export default async function decorate(block) {
     block.textContent = '';
     block.append(buildLogo(item, endpoint));
   } catch (err) {
-    // Keep POC resilient: log + render nothing visible rather than break the page.
-    // eslint-disable-next-line no-console
-    console.error('[header-logo] failed to load logo from GraphQL', err);
     block.textContent = '';
-    block.classList.add('header-logo--error');
+    renderError(block, err, endpoint);
   } finally {
     block.removeAttribute('aria-busy');
   }
