@@ -1,18 +1,29 @@
 /**
  * Header Logo Block
  *
- * POC: shared header logo between Classic AEM and EDS via AEM GraphQL.
+ * POC: shared header logo between Classic AEM Sites and EDS, fed by
+ * an AEM persisted GraphQL query (see Shared_Header_Footer_Technical_Design.docx).
  *
- * Fetches `headermodelByPath.item` from a persisted GraphQL query
- * and renders a clickable logo:
+ * Supports two response schemas so the same block survives the migration
+ * from the current POC endpoint to the architect's target endpoint:
  *
- *   <a href="{ctaurl}" aria-label="{ctalabel}">
- *     <img src="{logolinkurl}" alt="{logoalttext}" />
+ *   Current POC (shared/Header):
+ *     data.headermodelByPath.item.{ logolinkurl, logoalttext, ctalabel, ctaurl }
+ *
+ *   Architect target (shared/get-header):
+ *     data.headerByPath.item.{ logoImage: { _publishUrl }, logoAltText,
+ *                              logoLinkUrl, ctaLabel, ctaUrl, ... }
+ *
+ * Renders:
+ *   <a class="header-logo__link" href="{logoLinkUrl|ctaUrl|ctaurl}"
+ *      aria-label="{ctaLabel|ctalabel}">
+ *     <img src="{logoImage._publishUrl|logolinkurl}" alt="{logoAltText|logoalttext}" />
  *   </a>
  *
- * The endpoint URL can be overridden in AEM via the `endpoint` field
- * declared in component-models.json. If not provided, it falls back to
- * the default shared endpoint below.
+ * The endpoint URL is overridable from AEM via the `endpoint` field declared
+ * in `component-models.json`. Set it to
+ * `https://<aem-publish>/graphql/execute.json/shared/get-header` once the
+ * architect's persisted query is deployed.
  *
  * @param {HTMLElement} block The header-logo block element
  */
@@ -84,11 +95,35 @@ async function fetchHeaderModel(endpoint) {
     throw new Error(`Header GraphQL request failed: ${res.status} ${res.statusText}`);
   }
   const json = await res.json();
-  const item = json?.data?.headermodelByPath?.item;
+  // Accept either the architect's target schema (shared/get-header → data.headerByPath.item)
+  // or the current POC schema (shared/Header → data.headermodelByPath.item).
+  const item = json?.data?.headerByPath?.item
+    || json?.data?.headermodelByPath?.item;
   if (!item) {
-    throw new Error('Header GraphQL response is missing data.headermodelByPath.item');
+    throw new Error('Header GraphQL response is missing data.headerByPath.item / data.headermodelByPath.item');
   }
   return item;
+}
+
+/**
+ * Normalises field names across the two GraphQL schemas:
+ *   - architect target: { logoImage: { _publishUrl }, logoAltText, logoLinkUrl, ctaLabel, ctaUrl }
+ *   - current POC:      { logolinkurl, logoalttext, ctalabel, ctaurl }
+ *
+ * @param {Record<string, any>} item raw GraphQL item
+ * @returns {{ src: string, alt: string, href: string, label: string }}
+ */
+function normaliseItem(item) {
+  const src = item?.logoImage?._publishUrl
+    || item?.logoImage?._path
+    || item?.logolinkurl
+    || '';
+  const alt = item?.logoAltText || item?.logoalttext || '';
+  const href = item?.logoLinkUrl || item?.ctaUrl || item?.ctaurl || '';
+  const label = item?.ctaLabel || item?.ctalabel || '';
+  return {
+    src, alt, href, label,
+  };
 }
 
 function isDevHost() {
@@ -129,26 +164,23 @@ function renderError(block, err, endpoint) {
 
 function buildLogo(item, endpoint) {
   const {
-    logolinkurl = '',
-    logoalttext = '',
-    ctalabel = '',
-    ctaurl = '',
-  } = item;
+    src, alt, href, label,
+  } = normaliseItem(item);
 
   const link = document.createElement('a');
   link.className = 'header-logo__link';
-  link.href = normaliseHref(ctaurl);
-  if (ctalabel) link.setAttribute('aria-label', ctalabel);
+  link.href = normaliseHref(href);
+  if (label) link.setAttribute('aria-label', label);
   if (ABSOLUTE_URL_RE.test(link.href) && !link.href.startsWith(window.location.origin)) {
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
   }
 
-  if (looksLikeImage(logolinkurl)) {
+  if (looksLikeImage(src)) {
     const img = document.createElement('img');
     img.className = 'header-logo__img';
-    img.src = resolveAssetUrl(logolinkurl, endpoint);
-    img.alt = logoalttext || ctalabel || 'Logo';
+    img.src = resolveAssetUrl(src, endpoint);
+    img.alt = alt || label || 'Logo';
     img.loading = 'eager';
     img.decoding = 'async';
     link.append(img);
@@ -157,8 +189,8 @@ function buildLogo(item, endpoint) {
     // Keeps the POC renderable even before authors upload a real asset.
     const text = document.createElement('span');
     text.className = 'header-logo__text';
-    text.textContent = logolinkurl || ctalabel || 'Logo';
-    if (logoalttext) text.setAttribute('aria-label', logoalttext);
+    text.textContent = src || label || 'Logo';
+    if (alt) text.setAttribute('aria-label', alt);
     link.append(text);
   }
 
