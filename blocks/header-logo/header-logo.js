@@ -8,23 +8,15 @@
  * a code change.
  *
  * Authored field (see component-models.json):
- *   - endpoint: optional absolute URL of the persisted query.
- *               Defaults to the shared Publish endpoint below.
+ *   - endpoint: absolute URL of the persisted query
+ *               (falls back to DEFAULT_ENDPOINT below if not authored).
  *
  * @param {HTMLElement} block
  */
 
-const DEFAULT_ENDPOINT = 'https://publish-p153424-e1601770.adobeaemcloud.com/graphql/execute.json/shared/Header';
+import { readBlockConfig } from '../../scripts/aem.js';
 
-function readEndpoint(block) {
-  const row = block.querySelector(':scope > div');
-  const cells = row ? row.querySelectorAll(':scope > div') : [];
-  if (cells.length >= 2 && cells[0].textContent.trim().toLowerCase() === 'endpoint') {
-    const value = cells[1].textContent.trim();
-    if (value) return value;
-  }
-  return DEFAULT_ENDPOINT;
-}
+const DEFAULT_ENDPOINT = 'https://publish-p153424-e1601770.adobeaemcloud.com/graphql/execute.json/shared/Header';
 
 function pickFields(item) {
   return {
@@ -36,7 +28,13 @@ function pickFields(item) {
 }
 
 export default async function decorate(block) {
-  const endpoint = readEndpoint(block);
+  // Read the authored block configuration (key/value rows rendered by XWalk
+  // because "key-value": true is set on this component in component-definition.json).
+  // The author-provided `endpoint` value comes through here; falls back to
+  // DEFAULT_ENDPOINT only when the field is left empty.
+  const config = readBlockConfig(block);
+  const endpoint = config.endpoint || DEFAULT_ENDPOINT;
+
   block.textContent = '';
 
   try {
