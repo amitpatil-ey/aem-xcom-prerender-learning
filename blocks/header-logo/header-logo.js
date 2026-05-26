@@ -28,7 +28,7 @@
  * @param {HTMLElement} block The header-logo block element
  */
 
-const DEFAULT_ENDPOINT = 'https://publish-p153424-e1601770.adobeaemcloud.com/graphql/execute.json/shared/Header';
+const DEFAULT_ENDPOINT = 'https://author-p153424-e1601770.adobeaemcloud.com/graphql/execute.json/shared/Header';
 
 const ABSOLUTE_URL_RE = /^(https?:)?\/\//i;
 const ASSET_PATH_RE = /^\/(content|conf)\//i;
