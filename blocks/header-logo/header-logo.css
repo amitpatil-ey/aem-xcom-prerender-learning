@@ -1,32 +1,18 @@
-/* =========================
-   HEADER LOGO BLOCK
-   POC: shared logo between Classic AEM and EDS,
-   fed by AEM GraphQL persisted query.
-========================= */
+/* Header Logo Block */
 
 .header-logo {
   display: inline-flex;
   align-items: center;
-  line-height: 1;
-}
-
-.header-logo[aria-busy='true'] {
-  min-width: 128px;
-  min-height: 32px;
 }
 
 .header-logo__link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   text-decoration: none;
   color: inherit;
-  outline-offset: 4px;
 }
 
-.header-logo__link:hover,
-.header-logo__link:focus-visible {
-  text-decoration: none;
+.header-logo__link:hover {
   opacity: 0.85;
 }
 
@@ -35,63 +21,14 @@
   width: 128px;
   max-width: 100%;
   height: auto;
-  object-fit: contain;
 }
 
-/* Fallback when logolinkurl is plain text (POC placeholder data) */
-.header-logo__text {
-  font: var(--type-headline-1-font, 700 22px/1.2 system-ui, sans-serif);
-  letter-spacing: var(--type-headline-1-letter-spacing, normal);
-  color: inherit;
-}
-
-/* Skeleton placeholder shown while GraphQL is in-flight */
-.header-logo__skeleton {
-  width: 128px;
-  height: 32px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
-  background-size: 400% 100%;
-  animation: header-logo-skeleton 1.4s ease infinite;
-}
-
-@keyframes header-logo-skeleton {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
-}
-
-/* Production: hide silently. Dev (localhost / *.aem.page) shows .header-logo__error */
-.header-logo--error:empty {
-  display: none;
-}
-
-.header-logo__error {
-  display: inline-block;
-  padding: 4px 8px;
-  font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #842029;
-  background: #f8d7da;
-  border: 1px solid #f5c2c7;
-  border-radius: 4px;
-}
-
-/* When used inside the nav, align with the existing brand slot */
 header nav .header-logo {
   grid-area: brand;
-}
-
-header nav .header-logo__img {
-  width: 128px;
-  height: auto;
 }
 
 @media (max-width: 600px) {
   .header-logo__img {
     width: 96px;
-  }
-
-  .header-logo__skeleton {
-    width: 96px;
-    height: 28px;
   }
 }
