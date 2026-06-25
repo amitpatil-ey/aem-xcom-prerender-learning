@@ -833,5 +833,45 @@
         "readOnly": true
       }
     ]
+  },
+  {
+    "id": "product-features",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Section Heading",
+        "valueType": "string",
+        "value": "Product Features",
+        "description": "Main heading displayed above the feature columns"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Feature Image",
+        "multi": false,
+        "description": "Image shown on the left side of the feature section"
+      }
+    ]
+  },
+  {
+    "id": "product-feature-item",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Feature Title",
+        "valueType": "string",
+        "description": "Bold title line for this feature"
+      },
+      {
+        "component": "richtext",
+        "name": "detail",
+        "label": "Feature Description",
+        "valueType": "string",
+        "description": "Supporting detail text for this feature"
+      }
+    ]
   }
 ]

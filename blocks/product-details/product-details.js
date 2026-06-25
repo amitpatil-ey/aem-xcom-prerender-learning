@@ -77,6 +77,40 @@ function updateAddToCartButtonText(addToCartInstance, inCart, labels) {
   }
 }
 
+/**
+ * Resolves the locale suffix from the current URL.
+ * Returns 'es' when the path starts with /es, otherwise 'en'.
+ */
+function getLocale() {
+  return window.location.pathname.startsWith('/es') ? 'es' : 'en';
+}
+
+/**
+ * Fetches the /product-features/{sku}-{locale} fragment and inserts it
+ * as a full-width section immediately after the product-details section.
+ * Silently does nothing when no matching fragment exists.
+ */
+async function injectProductFeaturesFragment(sku, block) {
+  const { loadFragment } = await import('../fragment/fragment.js');
+  const locale = getLocale();
+  const fragmentPath = `/product-features/${sku}-${locale}`;
+
+  const fragmentEl = await loadFragment(fragmentPath);
+  if (!fragmentEl) return;
+
+  // Wrap all fragment sections into one container so we insert once
+  const featuresWrapper = document.createElement('div');
+  featuresWrapper.className = 'product-features-fragment-wrapper';
+  while (fragmentEl.firstElementChild) {
+    featuresWrapper.append(fragmentEl.firstElementChild);
+  }
+
+  // Insert right after the section that contains the product-details block
+  const pdpSection = block.closest('.section');
+  if (pdpSection?.parentElement) {
+    pdpSection.after(featuresWrapper);
+  }
+}
 export default async function decorate(block) {
   const product = events.lastPayload('pdp/data') ?? null;
   const labels = await fetchPlaceholders();
@@ -311,7 +345,10 @@ export default async function decorate(block) {
               '../../dropins/dealer/integrations/cart-service.js'
             );
 
-            await updateProductsFromCartWithDealer([{ ...itemPayload, uid: itemUidFromUrl }], skuScope);
+            await updateProductsFromCartWithDealer(
+              [{ ...itemPayload, uid: itemUidFromUrl }],
+              skuScope,
+            );
 
             // --- START REDIRECT ON UPDATE ---
             const updatedSku = values?.sku;
@@ -442,6 +479,14 @@ export default async function decorate(block) {
       setJsonLdProduct(product);
       setMetaTags(product);
       document.title = product.name;
+    }
+  }, { eager: true });
+
+  // Load the matching product-features fragment once the SKU is known.
+  // { eager: true } fires immediately when pdp/data was already dispatched.
+  events.on('pdp/data', (productData) => {
+    if (productData?.sku) {
+      injectProductFeaturesFragment(productData.sku, block);
     }
   }, { eager: true });
 

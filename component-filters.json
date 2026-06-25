@@ -29,7 +29,8 @@
       "hero-carousel",
       "image-grid",
       "header-logo",
-      "category"
+      "category",
+      "product-features"
     ]
   },
   {
@@ -419,5 +420,9 @@
   {
     "id": "category",
     "components": ["category"]
+  },
+  {
+    "id": "product-features",
+    "components": ["product-feature-item"]
   }
 ]
